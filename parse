@@ -1,0 +1,53 @@
+#!/bin/bash
+
+envs=`printenv`
+
+rm /etc/varnish/default.vcl
+
+for env in $envs
+do
+  IFS== read name value <<< "$env"  
+  if [[ $name == *PORT_3000_TCP_ADDR* ]]; then
+    
+cat >> /etc/varnish/default.vcl << EOF
+  backend ${name} {
+    .host = "${value}";
+    .port = "3000";
+  }
+  
+EOF
+
+  fi
+done
+
+cat >> /etc/varnish/default.vcl << EOF
+
+  director lb round-robin {
+  
+EOF
+
+for env in $envs
+do
+  IFS== read name value <<< "$env"  
+  if [[ $name == *PORT_3000_TCP_ADDR* ]]; then
+  
+cat >> /etc/varnish/default.vcl << EOF
+    { .backend = ${name}; }
+EOF
+
+  fi
+done
+
+cat >> /etc/varnish/default.vcl << EOF
+
+  }
+  
+EOF
+
+cat >> /etc/varnish/default.vcl << EOF
+
+  sub vcl_recv {
+    set req.backend = lb;
+  }
+  
+EOF
