@@ -1,52 +1,29 @@
-Automated build of Varnish with Docker
+Varnish with Docker
 ===========
 
-### Varnish environment variables
-Varnish will make of the following environment variables.
+Original work by: https://github.com/jacksoncage/varnish-docker
 
-	VARNISH_BACKEND_PORT 80
-	VARNISH_BACKEND_IP 172.17.42.1
+This docker image will install Varnish and it's configured to use with Node.js containers
+
+### Varnish environment variables
+Varnish will use the following environment variables. You can override them if you want
+
 	VARNISH_PORT 80
 
-### Use the pre built image
-The pre built image can be downloaded using docker directly. After that you do not need to use this command again, you will have the image on your machine.
+### Build the image
+To build the image run:
 
-	$ sudo docker pull jacksoncage/varnish
-
-
-### Build the docker image by yourself
-If you prefer you can easily build the docker image by yourself. After this the image is ready for use on your machine and can be used for multiple starts.
-
-	$ cd varnish-docker
-	$ sudo docker build -t jacksoncage/varnish .
-
+	$ cd docker-varnish
+	$ sudo docker build yourname/varnish .
 
 ### Start the container
-The container has all pre requisites set up to run any varnish application. Specify all needed environment variables.
+To run the container you need to link the nodejs containers you want to run behind the load balancer that Varnish will create.
+Varnish will detect all the node containers you pass and add them to the load balancer, we do this with the "parse" file. The only requirement is that when you link your containers you use the name "nodeN". Example: --link container_name:node1 --link container_name2:node2. This command will also map the port 80 inside the Varnish container to the port 8080 in your host so you can access the node application at http://localhost:8080
 
-	$ sudo docker run -i -d -p 80 -e VARNISH_BACKEND_PORT=8080 jacksoncage/varnish
+	$ sudo docker run -itdd -p 8080:80 --link container_name:node1 --link container_name2:node2 yourname/varnish 
 
+#### Bash into the container
+If you want to bash into the container you can, just do: 
 
-#### Start the container and keep control
-The command above starts the container in deamon mode (-d) and runs in the background. If you want to start it by yourself just to see what happens use this command:
-
-	$ sudo docker run -i -t -p 80 -e VARNISH_BACKEND_PORT=8080 jacksoncage/varnish bash
-
-Notice the two changes made here, first we replaced the deamon switch (-d) with the tty switch (-t) which pipes the std in and std out to your terminal.
-
-You now end up as a root user in the docker container and can do simple things like ls, cd and more. More complex things can be achieved after a `apt-get install` of one or more software(s) of choice.
-
-### Get the container ip and port
-The first command inspects your created container and get the IPv4 address. Second command docker exported port for 8080.
-
-    $ sudo docker inspect <container_id> | grep IPAddress | cut -d '"' -f 4
-    $ sudo docker port <container_id> 80 | cut -d ":" -f2
-
-Now go to `<your container's ip>:<container's port>` in your browser
-
-
-### Stop the container
-Stopping a running container is possible via the docker api. If only one instance of this container is running this command will stop it:
-
-	$ sudo docker stop `sudo docker ps |grep jacksoncage/varnish |cut -d\  -f1`
+	$ sudo docker run -itdd -p 8080:80 --link container_name:node1 --link container_name2:node2 yourname/varnish bash
 

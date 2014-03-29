@@ -13,6 +13,7 @@ RUN DEBIAN_FRONTEND=noninteractive apt-get install -y varnish vim git
 # Make our custom VCLs available on the container
 ADD default.vcl /etc/varnish/default.vcl
 
+# Export environment variables
 ENV VARNISH_PORT 80
 
 # Expose port 80
