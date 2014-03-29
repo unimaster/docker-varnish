@@ -4,10 +4,31 @@
 # Default backend definition.  Set this to point to your content
 # server.
 #
+#backend default {
+#    .host = "${VARNISH_BACKEND_IP}}";
+#    .port = "${VARNISH_BACKEND_PORT}";
+#}
+
 backend default {
-    .host = "${VARNISH_BACKEND_IP}}";
-    .port = "${VARNISH_BACKEND_PORT}";
+    .host = "${NODE1}";
+    .port = "${NODE_PORT}";
 }
+
+backend node2 {
+        .host = "${NODE2}";
+        .port = "${NODE_PORT}";
+}
+
+director lb round-robin {
+        { .backend = default; }
+        { .backend = node2; }
+}
+
+sub vcl_recv {
+        set req.backend = lb;
+}
+
+
 #
 # Below is a commented-out copy of the default VCL logic.  If you
 # redefine any of these subroutines, the built-in logic will be
