@@ -1,6 +1,8 @@
 FROM        ubuntu
 MAINTAINER  Luis Elizondo lelizondo@gmail.com
  
+ENV DEBIAN_FRONTEND=noninteractive 
+
 # Update apt sources
 RUN echo "deb http://archive.ubuntu.com/ubuntu precise main universe" > /etc/apt/sources.list
 
@@ -8,7 +10,7 @@ RUN echo "deb http://archive.ubuntu.com/ubuntu precise main universe" > /etc/apt
 RUN apt-get -qq update
 
 # Install base system
-RUN DEBIAN_FRONTEND=noninteractive apt-get install -y varnish vim git
+RUN apt-get install -y varnish vim git
 
 # Make our custom VCLs available on the container
 ADD default.vcl /etc/varnish/default.vcl
