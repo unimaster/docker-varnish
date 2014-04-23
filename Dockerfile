@@ -1,10 +1,10 @@
-FROM        ubuntu
+FROM        ubuntu:12.04
 MAINTAINER  Luis Elizondo lelizondo@gmail.com
  
-ENV DEBIAN_FRONTEND=noninteractive 
+ENV DEBIAN_FRONTEND noninteractive
 
 # Update apt sources
-RUN echo "deb http://archive.ubuntu.com/ubuntu precise main universe" > /etc/apt/sources.list
+#RUN echo "deb http://archive.ubuntu.com/ubuntu precise main universe" > /etc/apt/sources.list
 
 # Update the package repository
 RUN apt-get -qq update
