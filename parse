@@ -1,29 +1,28 @@
 #!/bin/bash
 
 ################################################################
+# 
+# Apache License 2.0
+#
+# This file will parse the Environment variables created by
+# node containers linked to the varnish container
+# and automatically create a default.vcl configuration file
+# 
+# The configuration file will create a load balancer and add
+# each of the node containers linked.
+#
+# Varnish is not configured to use the reverse proxy features
+# that it has, it just a load balancer.
+#
 ################################################################
-## Luis Elizondo <lelizondo@gmail.com>
-## Apache License 2.0
-##
-## This file will parse the Environment variables created by
-## node containers linked to the varnish container
-## and automatically create a default.vcl configuration file
-## 
-## The configuration file will create a load balancer and add
-## each of the node containers linked.
-##
-## Varnish is not configured to use the reverse proxy features
-## that it has, it just a load balancer.
-##
-################################################################
-################################################################
+
 
 # Get the Environment variables and save them in the variable envs
 envs=`printenv`
 
 # Remove the default.vcl file
-rm /etc/varnish/default.vcl
 
+echo "vcl 4.0;" > /etc/varnish/default.vcl
 # Loop through all of our variables
 for env in $envs
 do
