@@ -1,5 +1,5 @@
-FROM        ubuntu:12.04
-MAINTAINER  Luis Elizondo lelizondo@gmail.com
+FROM        ubuntu:14.10
+MAINTAINER  Frank Lemanschik
  
 ENV DEBIAN_FRONTEND noninteractive
 
