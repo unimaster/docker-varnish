@@ -30,16 +30,16 @@ do
   # separate the name of the variable from the value
   IFS== read name value <<< "$env"  
   
-  # if the variable has PORT_3000_TCP_ADDR it means this is a
+  # if the variable has PORT_80_TCP_ADDR it means this is a
   # variable created by a node container linked to the varnish
   # container
-  if [[ $name == *PORT_3000_TCP_ADDR* ]]; then
+  if [[ $name == *PORT_80_TCP_ADDR* ]]; then
 
 # create a backend for each node container found in the variables
 cat >> /etc/varnish/default.vcl << EOF
   backend ${name} {
     .host = "${value}";
-    .port = "3000";
+    .port = "80";
   }
   
 EOF
@@ -60,7 +60,7 @@ EOF
 for env in $envs
 do
   IFS== read name value <<< "$env"  
-  if [[ $name == *PORT_3000_TCP_ADDR* ]]; then
+  if [[ $name == *PORT_80_TCP_ADDR* ]]; then
 
 # create each backend in the load balancer
 cat >> /etc/varnish/default.vcl << EOF
