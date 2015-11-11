@@ -45,8 +45,7 @@ remove req.http.X-Forwarded-For;
 set req.http.X-Forwarded-For = client.ip;
  
 # Remove has_js and CloudFlare/Google Analytics __* cookies and statcounter is_unique
-set req.http.Cookie = regsuball(req.http.Cookie, "(^|;\s*)(_[_a-z]+|has_js|is_
-unique)=[^;]*", "");
+set req.http.Cookie = regsuball(req.http.Cookie, "(^|;\s*)(_[_a-z]+|has_js|is_unique)=[^;]*", "");
 # Remove a ";" prefix, if present.
 set req.http.Cookie = regsub(req.http.Cookie, "^;\s*", "");
  
